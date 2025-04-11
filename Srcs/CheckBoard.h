@@ -56,7 +56,7 @@ public:
         }
 
         // 亚像素迭代标准
-        cv::TermCriteria criteria = cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1);
+        cv::TermCriteria criteria = cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 30, 0.1);
 
         vector<int> idxs_delete;  // 角点检测失败的图片
         // 检测棋盘格的角点，并添加相应的像素坐标
@@ -118,7 +118,7 @@ public:
         bool found = cv::findChessboardCorners(img, patten_size, corners_pixel);
         if (found){
             cv::Mat img_gray;
-            cv::cvtColor(img, img_gray, CV_BGR2GRAY);
+            cv::cvtColor(img, img_gray, cv::COLOR_BGR2GRAY);
             // 角点亚像素优化
             cv::cornerSubPix(img_gray, corners_pixel, cv::Size(5, 5), cv::Size(-1, -1), criteria);
             corners_pixel_all.emplace_back(corners_pixel);

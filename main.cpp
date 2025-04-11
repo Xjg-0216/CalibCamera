@@ -1,3 +1,10 @@
+/*
+ * @Descripttion: 
+ * @Author: xujg
+ * @version: 
+ * @Date: 2025-04-07 16:00:11
+ * @LastEditTime: 2025-04-07 16:23:30
+ */
 #include "Srcs/CheckBoard.h"
 #include "Srcs/Camera.h"
 #include <opencv2/opencv.hpp>
@@ -21,14 +28,14 @@ void test(CheckBoard &checkboard,
 
 
 int main() {
-    CheckBoard checkboard( 4, 5, 25.f);
-    checkboard.detect_corners("/home/flyman/Desktop/CalibCamera/data", true);
+    CheckBoard checkboard( 7, 10, 31.f);
+    checkboard.detect_corners("/home/xujg/fisheye_180_1280_720", true);
     checkboard.show_params();
 
     Camera camera;
     camera.calib(checkboard);
     camera.show_params();
 
-    test(checkboard, camera, "/home/flyman/Desktop/CalibCamera/data/left0000.jpg");
+    // test(checkboard, camera, "/home/flyman/Desktop/CalibCamera/data/left0000.jpg");
     return 0;
 }

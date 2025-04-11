@@ -1,3 +1,10 @@
+/*
+ * @Descripttion: 
+ * @Author: xujg
+ * @version: 
+ * @Date: 2025-04-07 16:00:11
+ * @LastEditTime: 2025-04-07 16:24:52
+ */
 #ifndef STEREOCALIBRATION_CAMERA_H
 #define STEREOCALIBRATION_CAMERA_H
 #include <iostream>
@@ -23,14 +30,17 @@ public:
         cout << "\n开始标定：..." << endl;
         clock_t start, end;
         start = clock();
-        calib_pro_error = cv::calibrateCamera(
-                checkboard.corners_world_all,  // 世界坐标系点，vector<vector<cv::Point3f> >
-                checkboard.corners_pixel_all,  // 图像坐标系点(对应的)，vector<vector<cv::Point2f> >
-                checkboard.calib_images_size,  // 标定图像尺寸大小，cv::Size
-                cameraMatrix,      // 相机内参矩阵
-                distCoeffs,           // 畸变矩阵
-                _rVecs,                  // 旋转向量
-                _tVecs                   // 平移矩阵
+        // 使用 cv::fisheye::calibrate 进行鱼眼标定
+        calib_pro_error = cv::fisheye::calibrate(
+            checkboard.corners_world_all,  // 世界坐标系点，vector<vector<cv::Point3f>>
+            checkboard.corners_pixel_all,  // 图像坐标系点，vector<vector<cv::Point2f>>
+            checkboard.calib_images_size,  // 标定图像尺寸大小，cv::Size
+            cameraMatrix,      // 相机内参矩阵
+            distCoeffs,        // 畸变系数：k1, k2, k3, k4
+            _rVecs,            // 旋转矩阵
+            _tVecs,            // 平移矩阵
+            cv::fisheye::CALIB_RECOMPUTE_EXTRINSIC + cv::CALIB_USE_LU,
+            cv::TermCriteria(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, 20, 1e-6)
         );
         end = clock();
         cout << "耗时:\t" << double(end - start) / CLOCKS_PER_SEC << " S" << endl;
@@ -40,7 +50,8 @@ public:
 
     cv::Mat rectify(cv::Mat &img) const{  // 不能修改任何成员变量的值
         cv::Mat img_rectify = img.clone();
-        cv::undistort(img, img_rectify, cameraMatrix, distCoeffs);
+        // 使用 cv::fisheye::undistort 进行鱼眼图像去畸变
+        cv::fisheye::undistortImage(img, img_rectify, cameraMatrix, distCoeffs);
         return img_rectify;
     }
 
@@ -58,7 +69,7 @@ public:
         cout << "=" << cameraMatrix << endl;
 
         cout << "-----------------------" << endl;
-        cout << "畸变系数:\n" << "k1, k2, p1, p2, k3" << endl;
+        cout << "畸变系数:\n" << "k1, k2, k3, k4" << endl;
         cout << "=" << distCoeffs << endl;
     }
 };
