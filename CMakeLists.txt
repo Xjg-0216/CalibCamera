@@ -2,16 +2,27 @@ cmake_minimum_required(VERSION 3.16)
 project(StereoCalibration)
 
 set(CMAKE_CXX_STANDARD 11)
-# 01 导入OpenCV包
+
+# 01 包含头文件目录
+include_directories(include)
+# 02 导入OpenCV包
 find_package(OpenCV REQUIRED)
-# 02 包含头文件搜索路径
+find_package(yaml-cpp REQUIRED)
+# 03 包含头文件搜索路径
 include_directories(${OpenCV_INCLUDE_DIRS})
-# 03 添加可执行文件
-add_executable(
-        StereoCalibration main.cpp  # 主程序
-        Srcs/Camera.h               # 相机对象
-        Srcs/CheckBoard.h           # 标定板对象
-        Srcs/Utils.h                # 工具类
-        )
-# 04 链接相应的库
-target_link_libraries(StereoCalibration ${OpenCV_LIBS})
+
+
+# 04 源文件列表
+set(SOURCES
+    src/Camera.cpp
+    src/CheckBoard.cpp
+    src/Utils.cpp
+    src/Config.cpp
+    main.cpp
+)
+
+# 05 生成可执行文件
+add_executable(CalibCamera ${SOURCES})
+
+# 06 链接 OpenCV
+target_link_libraries(CalibCamera ${OpenCV_LIBS} yaml-cpp)

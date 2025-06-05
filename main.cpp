@@ -3,12 +3,15 @@
  * @Author: xujg
  * @version: 
  * @Date: 2025-04-07 16:00:11
- * @LastEditTime: 2025-04-07 16:23:30
+ * @LastEditTime: 2025-06-05 11:34:22
  */
-#include "Srcs/CheckBoard.h"
-#include "Srcs/Camera.h"
+#include "CheckBoard.h"
+#include "Camera.h"
+#include "Utils.h"
 #include <opencv2/opencv.hpp>
+#include "Config.h"
 
+using namespace std;
 
 void test(CheckBoard &checkboard,
           Camera &camera,
@@ -27,9 +30,15 @@ void test(CheckBoard &checkboard,
 }
 
 
-int main() {
-    CheckBoard checkboard( 7, 10, 31.f);
-    checkboard.detect_corners("/home/xujg/fisheye_180_1280_720", true);
+int main(int argc, char **argv) {
+
+    std::string filename = argv[1];
+    Config config = parseConfig(filename);
+
+    const string &model_path = config.imgs_path;
+
+    CheckBoard checkboard(config.points_per_col, config.points_per_row, config.square_size);
+    checkboard.detect_corners(model_path, config.detect_corners_imgs);
     checkboard.show_params();
 
     Camera camera;
