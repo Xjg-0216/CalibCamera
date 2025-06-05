@@ -3,7 +3,7 @@
  * @Author: xujg
  * @version: 
  * @Date: 2025-04-07 16:00:11
- * @LastEditTime: 2025-06-05 13:08:33
+ * @LastEditTime: 2025-06-05 13:33:59
 -->
 # 单目相机标定方法从理论到实践
 
@@ -31,6 +31,8 @@
    - `config.yaml`
 2. 运行构建
    - `./build.sh`
+3. 执行
+   - `./CalibCamera ./config.yaml `
 
 
 <img src="https://flyman-cjb.oss-cn-hangzhou.aliyuncs.com/picgos/20200806163018.png" width="宽度" height="高度" alt="图片名称" align=center>
